@@ -1,6 +1,5 @@
-import  {Router, query} from "express";
-import { prodsRouter } from "./products.router.js";
-import { cartServices } from "../dao/cart.service.js";
+import  {Router} from "express";
+import cartsController from "../controllers/carts.controller.js";
 
 const cartsRouter = Router();
 
@@ -10,7 +9,7 @@ cartsRouter.post('/', async(req, res)=>{
         const title= req.body;
 
         try {   
-                await cartServices.createCarts(title);
+                await cartsController.createCarts(title);
                 
                  res.status(201).send("Se creo correctamente el documento para el carrito");
                 
@@ -26,7 +25,7 @@ cartsRouter.get('/', async(req,res)=>{
 
 
         try {
-               let allCarts = await cartServices.getCarts();
+               let allCarts = await cartsController.getCarts();
                 
                  res.status(200).send(allCarts);
                 
@@ -40,13 +39,12 @@ cartsRouter.get('/', async(req,res)=>{
  })
 
 
-
         //Listando carrito con los prods
 cartsRouter.get('/:cid', async(req,res)=>{
 
 
         try {
-               let cartProdById = await cartServices.getCartbyId(req.params.cid);
+               let cartProdById = await cartsController.getCartbyId(req.params.cid);
                 
                  res.status(200).send(cartProdById);
                 
@@ -68,7 +66,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
 
                 try {
                        
-                        await cartServices.addProdToCard(cid, pid)
+                        await cartsController.addProdToCard(cid, pid)
                        res.status(200).send("Producto cargado correctamente al carrito")
                         
                 } catch (error) {
@@ -87,7 +85,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
                  const cid = req.params.cid;
                  try {
 
-                         let cartSelected = await cartServices.updateCart(cid, newProds);
+                         let cartSelected = await cartsController.updateCart(cid, newProds);
                         res.send("carrito actualizado: "+cartSelected)
                         console.log(cartSelected);
                         
@@ -106,7 +104,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
                         const pid = req.params.pid;
 
                         try {
-                               const result = await cartServices.updateProdQuantity(cid, pid, quantity)
+                               const result = await cartsController.updateProdQuantity(cid, pid, quantity)
                                console.log(result);
                                res.status(200).send(result)
                         } catch (error) {
@@ -125,7 +123,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
                                         const pid = req.params.pid;
 
                                 try {
-                                         await cartServices.deleteOnCartAProd(cid, pid)
+                                         await cartsController.deleteOnCartAProd(cid, pid)
                                          res.status(200).send("Se eliminó correctamente el producto del carrito")
                                 } catch (error) {
 
@@ -143,7 +141,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
                                 const cid = req.params.cid;
 
                         try {
-                                await cartServices.deleteAllCard(cid)
+                                await cartsController.deleteAllCard(cid)
                                 res.status(200).send("Carrito vaciado")
                         } catch (error) {
                                 res.status(500).send(error)

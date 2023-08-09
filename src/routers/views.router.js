@@ -1,11 +1,11 @@
 import express from 'express'
-import { prodsServices } from '../dao/products.service.js';
-import { cartServices } from '../dao/cart.service.js';
+import prodsController from '../controllers/products.controller.js';
 import {middlewarePassportJWT} from '../middlewares/auth.middleware.js'
+import cartsController from '../controllers/carts.controller.js';
 const viewRouter =express();
 
 //Paso la lista de productos a home.handlebars
-viewRouter.get('/products', async(req, res)=>{
+viewRouter.get('/', async(req, res)=>{
             
             
             let LimitProducts = req.query.limit;
@@ -16,12 +16,12 @@ viewRouter.get('/products', async(req, res)=>{
     try {
 
     
-            const prodsPaginate = await prodsServices.prodsPaginated(LimitProducts, pageProducts, queryProducts, sortProducts )
+            const prodsPaginate = await prodsController.prodsPaginated(LimitProducts, pageProducts, queryProducts, sortProducts )
 
            prodsPaginate.query = queryProducts;
            prodsPaginate.sort = sortProducts;
 
-           console.log(prodsPaginate);
+            console.log(prodsPaginate);
 
             //Filtros de seguridad
             if (pageProducts > prodsPaginate.totalPages || pageProducts < 1) {
@@ -67,7 +67,7 @@ viewRouter.get('/carts/:cid', async(req,res)=>{
     
 try {
 
-    const cartById = await cartServices.getCartOnviews(cid)
+    const cartById = await cartsController.getCartOnviews(cid)
 
     console.log(cartById);
     

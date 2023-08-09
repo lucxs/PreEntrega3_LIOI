@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { generateToken } from "../middlewares/jwt.middleware.js";
 
 const sessionsRouter = Router();
 
@@ -11,8 +12,13 @@ sessionsRouter.get(
 	'/githubcallback',
 	passport.authenticate('github', { failureRedirect: '/login' }),
 	(req, res) => {
-		req.session.user = req.user;
-		res.redirect('/products');
+		const user = req.user;
+		const token=  generateToken(user);
+		res.cookie("UserToken",token,{
+			maxAge: 180000,
+             httpOnly:true
+		})
+		res.redirect('/');
 	}
 );
 

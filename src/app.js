@@ -5,14 +5,15 @@ import {Server} from 'socket.io'
 import {prodsRouter} from "./routers/products.router.js"
 import { cartsRouter } from "./routers/carts.router.js";
 import viewRouter from './routers/views.router.js'
-import { prodsServices } from "./dao/products.service.js";
-import { msgService } from "./dao/message.service.js";
+import prodsController from "./controllers/products.controller.js";
+import msgController from "./controllers/messages.controller.js";
 import cookieParser from "cookie-parser"
 import session from "express-session"
 import {usersRouter} from "./routers/users.router.js";
  import sessionsRouter from "./routers/sessions.router.js";
 import inicializePassport from "./config/passport.config.js";
 import passport from "passport";
+import config from "./config/config.js";
 
 
 const app = express();
@@ -23,9 +24,9 @@ app.use(express.urlencoded({extended: true}))
 //-----------------------------------------------------------------------------------------------------//
 
 
-mongoose.connect('mongodb+srv://lioilucas75:Lucas024!!@codercluster.fg4paop.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect(config.mongoUrl);
 
-const httpServer = app.listen(8080, ()=> console.log("Escuchando puerto 8080"))
+const httpServer = app.listen(config.port, ()=> console.log("Escuchando puerto ",config.port))
 
 const socketServer = new Server(httpServer);
 
@@ -38,14 +39,14 @@ app.use(express.static('public'));
 
 
 inicializePassport();
-app.use(cookieParser("L4passd3l4ascokki33s"))
+app.use(cookieParser(config.COOKIE_PARSER))
 app.use(passport.initialize());
 
 
 //session
 app.use(
 	session({
-		secret: 'B2zdY3B$pHmxW%',
+		secret: config.sessionSecret,
 		resave: true,
 		saveUninitialized: true,
 	})
@@ -68,7 +69,7 @@ socketServer.on('connection', async (socket)=>{
     try {
 
 
-                const allprods = await prodsServices.getProducts()
+                const allprods = await prodsController.getProducts()
 
 
     // //Envio la lista de productos
@@ -82,7 +83,7 @@ socketServer.on('connection', async (socket)=>{
             try {
 
               
-                await prodsServices.addProduct(data);
+                await prodsController.addProduct(data);
                 
             } catch (error) {
 
@@ -99,7 +100,7 @@ socketServer.on('connection', async (socket)=>{
 
             try {
 
-                 await prodsServices.deleteProduct(data)
+                 await prodsController.deleteProduct(data)
                 
             } catch (error) {
 
@@ -117,9 +118,9 @@ socketServer.on('connection', async (socket)=>{
                             try {
 
 
-                                 await msgService.addMessages(data)
+                                 await msgController.addMessages(data)
 
-                                 const MSGS = await msgService.getMessages()
+                                 const MSGS = await msgController.getMessages()
 
                                  return socketServer.emit("sendingMSGs", MSGS)
                                 
@@ -137,6 +138,9 @@ socketServer.on('connection', async (socket)=>{
         console.log("Algo salió mal en el socket connection =>", error);
         
     }
+
+
+
 
 
 })

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../middlewares/jwt.middleware.js";
+import userController from "../controllers/user.controller.js";
 const usersRouter = Router();
 
 
@@ -27,11 +28,10 @@ usersRouter.post('/', passport.authenticate('register',{failureRedirect: '/serve
              httpOnly:true
          })
          
-         res.redirect('/products') 
+         res.redirect('/') 
         
        
     })
-
 
 
 usersRouter.get('/logout',(req, res)=>{

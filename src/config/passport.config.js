@@ -1,9 +1,10 @@
 import passport from 'passport'
 import GitHubStrategy from 'passport-github2';
-import { usersServices } from '../dao/users.service.js'
+import userController from '../controllers/user.controller.js';
 import { comparePassword, hashPassword } from '../utils/encript.util.js';
 import local from 'passport-local';
 import { Strategy, ExtractJwt } from 'passport-jwt';
+import config from './config.js';
 
 const LocalStrategy = local.Strategy;
 const jwtStrategy = Strategy;
@@ -20,14 +21,14 @@ new LocalStrategy(
     const { first_name, last_name} = req.body;
 
     try {
-            const user = await usersServices.getByEmail(username)
+            const user = await userController.getByEmail(username)
 
             if (user) {
                 return done(null, false, {message: 'User already exists'})
             }
 
             const hashedPassword = hashPassword(password);
-            const newUser = await usersServices.createUser({
+            const newUser = await userController.createUser({
                 first_name,
                 last_name,
                 email: username,
@@ -53,7 +54,7 @@ new LocalStrategy(
          async(username, password, done)=>{
 
         try {
-                const user = await usersServices.getByEmail(username);
+                const user = await userController.getByEmail(username);
 
                 if (!user) {
                     return done(null, false, {message: 'User not found'});
@@ -77,8 +78,8 @@ new LocalStrategy(
 //Github strategy
     passport.use('github', new GitHubStrategy(
         {
-            clientID: 'Iv1.15c0f78045d2f4bc',
-            clientSecret: '2541e479e4470df296d2ad2acd5445586dfd13fe',
+            clientID: config.CLIENT_ID,
+            clientSecret: config.CLIENT_SECRET,
             callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
 
         }, //Aca entonces me estaria conectando a la applicacion que hemos creado en github
@@ -87,7 +88,7 @@ new LocalStrategy(
                 try {
 
                     console.log(profile); 
-                let user = await usersServices.getByEmail(profile._json.email) //Aqui creo una variable user para traer de mongo el usuario cuyo email coincida con lo que me viene de profile
+                let user = await userController.getByEmail(profile._json.email) //Aqui creo una variable user para traer de mongo el usuario cuyo email coincida con lo que me viene de profile
                 if(!user){
 
                         let newUser = {
@@ -97,7 +98,7 @@ new LocalStrategy(
                                 password: ''
                         };
 
-                        user = await usersServices.createUser(newUser)
+                        user = await userController.createUser(newUser)
                         done(null, user);
                 }else{
                     done(null, user)
@@ -149,7 +150,7 @@ passport.serializeUser((user, done)=>{
 })
 passport.deserializeUser(async (id, done)=>{
 
-        const user = await usersServices.getById(id)
+        const user = await userController.getById(id)
 if (user.email === "adminCoder@coder.com") {
     user.admin = true
 }
