@@ -51,26 +51,10 @@ prodsRouter.post('/', async(req, res)=>{
 
 
     try {
-
         //Añado productos
-    
-             prodsController.addProduct({
-            "title": "Lentes de sol",
-            "description": "Lentes de sol Oakley con aumento",
-            "price": 37500,
-            "thumbnail": "url",
-            "code": 455585548,
-            "stock": 5,
-            "status": true,
-            "marca": "Oakley",
-        })
-
-        // //Control de duplicados por CODE
-        //  await securityFilter(455585548);
-
-         const allProds = await prodsController.getProducts();
-
-          res.status(200).send(allProds)
+                const dataProds = await req.body;
+                const addingProd = await prodsController.addProduct(dataProds)
+                res.status(200).send({"Producto agregado": addingProd})
 
         
     } catch (error) {

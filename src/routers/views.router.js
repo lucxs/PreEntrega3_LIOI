@@ -49,14 +49,14 @@ viewRouter.get('/', async(req, res)=>{
 })
 
 
-viewRouter.get('/realtimeproducts',async(req, res)=>{
+viewRouter.get('/adminDashboard',async(req, res)=>{
 
     let LimitProducts = req.query.limit;
     let pageProducts = req.query.page;
     let queryProducts = req.query.query;
     let sortProducts = req.query.marca;
 
-    res.render('realtimeproducts', LimitProducts, pageProducts, queryProducts, sortProducts);
+    res.render('adminDashboard', LimitProducts, pageProducts, queryProducts, sortProducts);
 
 }) 
 
@@ -107,6 +107,7 @@ viewRouter.get('/login',(req,res)=>{
 
 viewRouter.get('/current',middlewarePassportJWT,(req, res) => {
          const user = req.user;
+         console.log("ESTE ES EL USER:",user);
           res.render('privateCurrent',{user})
 });
 

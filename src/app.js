@@ -69,7 +69,7 @@ socketServer.on('connection', async (socket)=>{
     try {
 
 
-                const allprods = await prodsController.getProducts()
+                const allprods = await prodsController.getProds()
 
 
     // //Envio la lista de productos

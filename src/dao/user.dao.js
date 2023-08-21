@@ -20,6 +20,19 @@ async getAllUsers(){
     }
 }
 
+
+async getUserById(id){
+
+    try {
+        return await this.model.findById(id)
+        
+    } catch (error) {
+
+        console.log("Error getUserById - Capa de persistencia(DAO)");
+        
+    }
+}
+
 async addUser(userData){
     try {
         

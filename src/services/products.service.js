@@ -19,20 +19,17 @@ export default class ProductsServices {
 
           }
 
-         addProduct(data){
+         async addProduct(data){
 
-            const actualprods =  this.dao.getProducts();
-            const newfilter = actualprods.filter(element => element.code == data.code)
-            if (newfilter.length > 0) {
-               
-                     const messageError = "Este producto con code: "+data.code+" Ya se encuentra existente en otro producto"
-                 
-                     return messageError
-            }else{
+               try {
 
-               return this.dao.addProduct(data);
+                  return await this.dao.addProduct(data);
+                  
+               } catch (error) {
 
-            }
+                  console.log("Error product.service metodo addProduct:", error);
+                  
+               }
          }  
             
    

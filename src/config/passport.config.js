@@ -18,8 +18,8 @@ passport.use(
 new LocalStrategy(
     {usernameField: 'email', passReqToCallback: true},
   async(req, username, password, done) => {
-    const { first_name, last_name} = req.body;
-
+    
+      const dataUser = req.body;
     try {
             const user = await userController.getByEmail(username)
 
@@ -29,12 +29,12 @@ new LocalStrategy(
 
             const hashedPassword = hashPassword(password);
             const newUser = await userController.createUser({
-                first_name,
-                last_name,
+                name: dataUser.firstName,
+                lastname: dataUser.lastName,
                 email: username,
                 password: hashedPassword,
                 cart:null,
-                role:'user'
+                role: dataUser.role
             })
 
             return done(null, newUser)

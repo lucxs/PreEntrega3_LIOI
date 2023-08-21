@@ -1,16 +1,16 @@
 import ProductsServices from "../services/products.service.js";
 import productsDAO from "../dao/products.dao.js";
-
+import productRepository from "../repositories/products/product.repository.js";
 class ProductsController{
 
         constructor(){
-
+            this.daoFiltered = new productRepository(productsDAO)
             this.service = new ProductsServices(productsDAO);
         }
 
         async getProds(){
 
-        return  this.service.getProducts();
+        return await this.service.getProducts();
             
         }
 
@@ -19,9 +19,30 @@ class ProductsController{
                 return this.service.getProdById(id);
         }
 
-        addProduct(data){
+        async addProduct(data){
+        
+            try {
 
-            return this.service.addProduct(data);
+                const productChecked = await this.daoFiltered.checkingProduct(data)
+            const actualprods =await this.service.getProducts();
+            const newfilter =await actualprods.filter(element => element.code == data.code)
+            if (newfilter.length > 0) {
+               
+                     const messageError = {"messageError":"Este producto con code: "+data.code+" Ya se encuentra existente en otro producto"}
+                 
+                     return messageError
+            }else{
+
+                return await this.service.addProduct(productChecked);
+
+            }
+                
+            } catch (error) {
+
+                console.log("Error products.controller: ", error);
+                
+            }
+            
         }
 
         updateProduct(id, newObject){
