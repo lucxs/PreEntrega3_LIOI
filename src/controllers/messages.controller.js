@@ -10,13 +10,22 @@ constructor(){
 
 async getMessages(){
 
-        return await this.service.getMessages();
+        try {
+                return await this.service.getMessages();
+        } catch (error) {
+                console.log("Error message.controller: ",error);
+        }
 
 }
 
-async addMessages(){
+async addMessages(data){
 
-        return await this.service.addMessages();
+        try {
+                return await this.service.addMessages(data);
+                
+        } catch (error) {
+                console.log("Error message.addMessage: ",error);
+        }
 
 }
 

@@ -1,6 +1,6 @@
 import express from 'express'
 import prodsController from '../controllers/products.controller.js';
-import {middlewarePassportJWT} from '../middlewares/auth.middleware.js'
+import {middlewarePassportJWT, middlewarePassportJWTAdmin,middlewarePassportJWTUser} from '../middlewares/auth.middleware.js'
 import cartsController from '../controllers/carts.controller.js';
 const viewRouter =express();
 
@@ -13,6 +13,7 @@ viewRouter.get('/', async(req, res)=>{
             let queryProducts = req.query.marca;
             let sortProducts = req.query.sort;
 
+           
     try {
 
     
@@ -49,7 +50,11 @@ viewRouter.get('/', async(req, res)=>{
 })
 
 
-viewRouter.get('/adminDashboard',async(req, res)=>{
+viewRouter.get('/adminDashboard',middlewarePassportJWTAdmin,async(req, res)=>{
+
+    const user =  req.user
+
+    console.log("El user admin - adminDashboard:", user);
 
     let LimitProducts = req.query.limit;
     let pageProducts = req.query.page;
@@ -57,6 +62,7 @@ viewRouter.get('/adminDashboard',async(req, res)=>{
     let sortProducts = req.query.marca;
 
     res.render('adminDashboard', LimitProducts, pageProducts, queryProducts, sortProducts);
+
 
 }) 
 
@@ -115,10 +121,10 @@ viewRouter.get('/current',middlewarePassportJWT,(req, res) => {
 //chat
 
 
-viewRouter.get('/chat', (req, res)=>{
+viewRouter.get('/chat',middlewarePassportJWTUser, (req, res)=>{
 
-
-        res.render('chat')
+        const user = req.user;
+        res.render('chat',{user})
 
 })
 

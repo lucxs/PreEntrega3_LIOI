@@ -151,7 +151,7 @@ passport.serializeUser((user, done)=>{
 passport.deserializeUser(async (id, done)=>{
 
         const user = await userController.getById(id)
-if (user.email === "adminCoder@coder.com") {
+if (user.role = "admin") {
     user.admin = true
 }
 else{

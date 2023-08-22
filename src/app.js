@@ -112,11 +112,11 @@ socketServer.on('connection', async (socket)=>{
 
                 //Socket chat
 
-
                 socket.on("message", async(data)=>{
 
                             try {
 
+                                console.log("data desde app", data);
 
                                  await msgController.addMessages(data)
 
@@ -131,6 +131,8 @@ socketServer.on('connection', async (socket)=>{
                                 
                             }
                 })
+
+                
 
         
     } catch (error) {

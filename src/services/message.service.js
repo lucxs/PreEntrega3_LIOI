@@ -8,20 +8,31 @@ export default class messageService{
 
         }
 
-
         async getMessages(){
 
-                return await this.dao.getMessages()
+                try {
 
+                return await this.dao.getMessages()  
 
+                } catch (error) {
+                        console.log("Error getMessages.services: ",error);
+                        
+                }
+
+                
         }
 
         async addMessages(data){
 
-                    return await this.dao.addMessages(data)
-                 
-        }
+                try {
+                        return await this.dao.addMessages(data) 
+                        
+                } catch (error) {
 
+                        console.log("Error addMessage.services: ",error);                        
+                }
+                               
+        }
 
 }
 

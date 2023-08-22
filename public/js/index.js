@@ -103,38 +103,20 @@ function addProduct(e){
 
 //Seccion del chat
 
-let user;
 let Inputmsj = document.getElementById("msj")
-
-Swal.fire({
-
-    title: "Bienvenido",
-    input: 'text',
-    text: "Ingrese su correo para participar de MiChat",
-    icon: "success",
-    inputValidator: (value)=>{
-
-        return !value && 'Tenes que identificarte'
-
-    },
-
-    allowOutsideClick: false,
-
-}).then((result)=>{
-    user = result.value;
-});
-
+let usr = document.getElementById("Title")
  
 Inputmsj.addEventListener('keyup', event =>{
 
 
     if (event.key == "Enter"){
-
-        let msj = Inputmsj.value;
-        if (msj.trim().length > 0){
-            socket.emit("message", {"user":user, "message":msj})
-            Inputmsj.value = '';
-        }
+        let user = usr.getAttribute("data-firstname")
+         let msj = Inputmsj.value;
+         console.log("Desde el primer socket emit:",{"user":user, "msg":msj});
+         if (msj.trim().length > 0){
+             socket.emit("message", {"user":user,"message":msj})
+             Inputmsj.value = '';
+         }
     }
 
 })
