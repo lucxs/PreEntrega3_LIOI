@@ -27,6 +27,17 @@ class ProductsDAO{
         }
     }
 
+    async getSomeProdsById(data){
+        try {
+            return await this.model.find({_id: {$in: data}})
+            
+        } catch (error) {
+
+            console.log("Error getSomeProdsById capa PRODUCTS-DAO");
+            
+        }
+    }
+
      async addProduct(data){
 
         try {

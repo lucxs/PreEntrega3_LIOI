@@ -19,16 +19,23 @@
                         <p class="card-text">{{this.product.description}}</p>
                         <p class="card-text">Precio: ${{this.product.price}}</p>
                         <p class="card-text">Marca: {{this.product.marca}}</p>
-                        <p class="card-text">Cantidad a comprar: {{this.quantity}}</p>
+                        <p class="card-text">Cantidad a comprar: <input type="number" min="1" value="{{this.quantity}}"></p>
+                        
+                        <button class="btn btn-primary" onclick="UpdateQProdFromCart('/api/carts/6490d95c437c8c2412dbaf4b/product/{{this.product._id}}')">actualizar cantidad</button>
+                       
+                        
+                        <button class="btn btn-primary" onclick="deleteProdOnCart('/api/carts/6490d95c437c8c2412dbaf4b/product/{{this.product._id}}')">Eliminar del carrito</button>
+                        
                     </div>
             </div>
             {{/each}}
-            
-    </seccion>
                 
+    </seccion>
+                <button class="btn btn-primary" onclick="purcharse()">finalizar compra</button>
+                <button class="btn btn-primary" onclick="emptyCart()">vaciar carrito</button>
 
         </main>
             
-
+<script src="/js/cartScript.js"></script>
 </body>
 </html>

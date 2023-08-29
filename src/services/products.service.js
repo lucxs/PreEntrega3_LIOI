@@ -19,6 +19,10 @@ export default class ProductsServices {
 
           }
 
+          async getSomeProdsById(data){
+            return await this.dao.getSomeProdsById(data)
+          }
+
          async addProduct(data){
 
                try {

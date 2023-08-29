@@ -1,6 +1,6 @@
 import express from 'express'
 import prodsController from '../controllers/products.controller.js';
-import {middlewarePassportJWT, middlewarePassportJWTAdmin,middlewarePassportJWTUser} from '../middlewares/auth.middleware.js'
+import {middlewarePassportJWT, middlewarePassportJWTAdmin,middlewarePassportJWTUser, middlewareAccessToCart} from '../middlewares/auth.middleware.js'
 import cartsController from '../controllers/carts.controller.js';
 const viewRouter =express();
 
@@ -67,7 +67,7 @@ viewRouter.get('/adminDashboard',middlewarePassportJWTAdmin,async(req, res)=>{
 }) 
 
 //Renderizo carts.handlebars
-viewRouter.get('/carts/:cid', async(req,res)=>{
+viewRouter.get('/carts/:cid',middlewareAccessToCart, async(req,res)=>{
 
         let cid = req.params.cid;
     

@@ -46,14 +46,16 @@ class CartsController {
                 }
           
                 const product = await this.prodsService.getProdById(pid);
-                console.log(product);
+                
           
                 if (!product) {
                   throw new Error("No existe el producto buscado");
                 }
           
-                const index = cart.products.findIndex((producto) => {
+                const index =await cart.products.findIndex((producto) => {
+              
                   return producto.product.toString() === pid;
+                  
                 });
                 if (index === -1) {
                   cart.products.push({ product: pid, quantity: 1 });
@@ -125,6 +127,40 @@ async updateProdQuantity(cid,pid, quantityUpdated){
                           }
                 }
 
+                async purcharseProccess(cid){
+
+                  try {
+                    const cart = await this.cartService.getCartbyId(cid)
+                    
+                    //Hago una lista de los id de prods que hay en el carrito
+                      const IdsProdsFromCarts = cart.products.map((prod)=>{
+                      
+                        return  prod.product
+
+                      })
+
+                      //Products quantity from cart
+
+                      const QntyProdsFromCarts = cart.products.map((prod)=>{
+                      
+                        return  {"id":prod.product,"quantity":prod.quantity}
+
+                      })
+                      
+                          const prodsFiltered = await this.prodsService.getSomeProdsById(IdsProdsFromCarts)
+
+                          
+
+                      return QntyProdsFromCarts
+                    
+                  } catch (error) {
+                      console.log("Error en carts.Controller - Metodo purcharseProccess:",error);
+                  }
+
+                  
+
+                }
+
 
                   //revisar este
 
@@ -135,7 +171,8 @@ async updateProdQuantity(cid,pid, quantityUpdated){
 
                   const cartSelected = await this.cartService.getCartbyId(cid)
                           cartSelected.products = cartSelected.products.filter((product) => product.product.toString() !== pid);
-                          let result = await this.cartService.updateCart(cid, cartSelected)
+                          let result = await this.cartService.updateCart(cid, cartSelected.products)
+                          console.log("aca ",result);
                            return result;
           } catch (error) {
 

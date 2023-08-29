@@ -1,5 +1,6 @@
 import  {Router} from "express";
 import cartsController from "../controllers/carts.controller.js";
+import { middlewareAccessToCart } from "../middlewares/auth.middleware.js";
 
 const cartsRouter = Router();
 
@@ -59,7 +60,7 @@ cartsRouter.get('/:cid', async(req,res)=>{
 
 
                 //Agregando Producto a una cart segun Cart ID
-                cartsRouter.post('/:cid/product/:pid', async(req, res)=>{
+                cartsRouter.post('/:cid/product/:pid',middlewareAccessToCart, async(req, res)=>{
 
                         const cid = req.params.cid;
                         const pid = req.params.pid;
@@ -109,6 +110,23 @@ cartsRouter.get('/:cid', async(req,res)=>{
                                res.status(200).send(result)
                         } catch (error) {
                                 res.status(501).send(error)
+                        }
+
+                })
+
+
+                        //Proceso de compra
+                cartsRouter.get('/:cid/purcharse', async(req,res)=>{
+
+                        try {
+                                const result = await cartsController.purcharseProccess(req.params.cid)
+                                console.log(result);
+                                 res.status(200).send({result}) 
+                                
+                        } catch (error) {
+
+                                console.log("Error en cart.router purcharse:", error);
+                                
                         }
 
                 })

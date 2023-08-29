@@ -39,7 +39,7 @@ const middlewarePassportJWTAdmin = async (req, res, next) => {
    
 			 }else{
 
-				return res.send({"message":"error de auth"});
+				return res.send({"message":"error de usuario: No puede ingresar, no tiene privilegios de ADMIN"});
 			 }
    
 		
@@ -69,16 +69,49 @@ const middlewarePassportJWTUser = async (req, res, next) => {
    
 			 }else{
 
-				return res.send({"message":"error de auth"});
+				return res.send({"message":"error de usuario: Solo acceso exclusivo a usuarios"});
 			 }
    
 		
 		
 	})(req, res, next);
+
+};
+
+const middlewareAccessToCart = async (req, res, next) => {
+	passport.authenticate('current', { session: false }, (err, usr, info) => {
+		
+		if (err) {
+			next(err);
+		}
+		
+			if(!usr){
+
+				return res.send({"message":"error de usuario"});
+	   
+		   }
+
+		   	 if (usr.user.role === "admin") {
+
+				 res.send({"message":"error de usuario: Solo acceso exclusivo a usuarios, por favor inicie sesion como usuario"});
+					
+			 }else{
+
+				req.user =  usr;
+			 		return next();
+
+			 }
+   
+		
+		
+	})(req, res, next);
+
+
+	
 };
 
 
 
-export { middlewarePassportJWT,middlewarePassportJWTAdmin, middlewarePassportJWTUser };
+export { middlewarePassportJWT,middlewarePassportJWTAdmin, middlewarePassportJWTUser,middlewareAccessToCart };
 
 

@@ -56,22 +56,8 @@ function addProduct(e){
         alert("Se agrego un nuevo producto")
 }
 
-
-//Funcion del onclick para eliminar productos del home
-
-
- function deleteProd(e){
-
-    e.preventDefault()
-
-    let idProd = document.getElementById("idprod").value
-
-              socket.emit('prodIdToDelete', idProd)
-
-}
-
-            //AddingProdToCart
-   function addProductToCart(path){
+//AddingProdToCart
+function addProductToCart(path){
     
     fetch(path,
         {
@@ -100,6 +86,21 @@ function addProduct(e){
                  
  }
 
+
+//Funcion del onclick para eliminar productos del home
+
+
+ function deleteProd(e){
+
+    e.preventDefault()
+
+    let idProd = document.getElementById("idprod").value
+
+              socket.emit('prodIdToDelete', idProd)
+
+}
+
+            
 
 //Seccion del chat
 
