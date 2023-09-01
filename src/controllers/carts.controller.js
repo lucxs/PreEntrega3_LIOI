@@ -114,6 +114,7 @@ async updateProdQuantity(cid,pid, quantityUpdated){
 
     }
 
+
     async getCartOnviews(cid)
                 {
 
@@ -126,6 +127,20 @@ async updateProdQuantity(cid,pid, quantityUpdated){
                                 console.log("Error en getCartOnviews");                                                
                           }
                 }
+
+                async #updateStockProduct(pid, newValue){
+
+                  try {
+            
+                    return await this.prodsService.updateStockProduct(pid, newValue)
+                    
+                  } catch (error) {
+            
+                    console.log("Error al actualizar el stock del producto: ", error);
+                    
+                  }
+                }
+
 
                 async purcharseProccess(cid){
 
@@ -149,9 +164,21 @@ async updateProdQuantity(cid,pid, quantityUpdated){
                       
                           const prodsFiltered = await this.prodsService.getSomeProdsById(IdsProdsFromCarts)
 
-                          
+                          for (let i = 0; i < QntyProdsFromCarts.length; i++) {
+                              //guardo el id
+                              let pid = QntyProdsFromCarts[i].id.toString()
+                              //Guardo el valor del quantity
+                              let newValue = QntyProdsFromCarts[i].quantity.toString()
 
-                      return QntyProdsFromCarts
+
+                             const prodsUpdated =await this.#updateStockProduct(pid, newValue)
+                              
+                            return prodsUpdated
+                          }
+
+                          
+                              
+                      return  QntyProdsFromCarts
                     
                   } catch (error) {
                       console.log("Error en carts.Controller - Metodo purcharseProccess:",error);
@@ -172,7 +199,6 @@ async updateProdQuantity(cid,pid, quantityUpdated){
                   const cartSelected = await this.cartService.getCartbyId(cid)
                           cartSelected.products = cartSelected.products.filter((product) => product.product.toString() !== pid);
                           let result = await this.cartService.updateCart(cid, cartSelected.products)
-                          console.log("aca ",result);
                            return result;
           } catch (error) {
 
@@ -181,7 +207,7 @@ async updateProdQuantity(cid,pid, quantityUpdated){
           }
 
               }
-
+                //vaciando carrito
               async deleteAllCard(id){
 
                 try {

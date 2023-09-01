@@ -46,6 +46,13 @@ export default class ProductsServices {
                   
     }
 
+    updateStockProduct(pid, newValue){
+            
+
+      return this.dao.updateProductStock(pid, newValue)
+         
+}
+
             deleteProduct(data){
 
             this.dao.deleteProduct(data)

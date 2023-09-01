@@ -62,6 +62,31 @@ class ProductsDAO{
         }
 }
 
+async updateProductStock(id, newValue){
+    try {
+
+        const product = await this.model.findOne({ _id: id })
+
+        const originalStock = product.stock;
+
+        if (originalStock < newValue) {
+            return {"Error": "Stock insufiente"}
+        }else{
+
+            const newStock = originalStock - newValue;
+            return await this.model.updateOne(
+                { _id: id },
+                { $set: { stock: newStock } }
+            );
+        }
+
+
+    } catch (error) {
+        
+        console.log("error en metodo updateProduct - dao - ",error);
+    }
+}
+
     async prodsPaginated(limit, page, query, sort){
 
         try {

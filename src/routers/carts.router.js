@@ -99,8 +99,8 @@ cartsRouter.get('/:cid', async(req,res)=>{
 
                 //Update quantity de un producto de una cart seleccionada
 
-                cartsRouter.put('/:cid/product/:pid', async(req, res)=>{
-                        const {quantity} = req.body;
+                cartsRouter.put('/:cid/product/:pid/:quantity', async(req, res)=>{
+                        const quantity = req.params.quantity;
                         const cid = req.params.cid;
                         const pid = req.params.pid;
 
@@ -116,12 +116,17 @@ cartsRouter.get('/:cid', async(req,res)=>{
 
 
                         //Proceso de compra
-                cartsRouter.get('/:cid/purcharse', async(req,res)=>{
+                cartsRouter.put('/:cid/purcharse', async(req,res)=>{
 
                         try {
                                 const result = await cartsController.purcharseProccess(req.params.cid)
-                                console.log(result);
-                                 res.status(200).send({result}) 
+                                console.log(result.acknowledged);
+                                if (result.acknowledged === true) {
+                                        res.status(200).send(result) 
+                                }else{
+                                        res.send(result)
+                                }
+                                 
                                 
                         } catch (error) {
 
