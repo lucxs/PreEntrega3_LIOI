@@ -162,7 +162,11 @@ async updateProdQuantity(cid,pid, quantityUpdated){
 
                       })
                       
-                          const prodsFiltered = await this.prodsService.getSomeProdsById(IdsProdsFromCarts)
+                          //Array de prods para ticket
+                          const prodsPurcharsed = []
+
+                          //Array de prods sin stock o que no alcanza segun la cantidad
+                          const OutOfStock = []
 
                           for (let i = 0; i < QntyProdsFromCarts.length; i++) {
                               //guardo el id
@@ -170,10 +174,32 @@ async updateProdQuantity(cid,pid, quantityUpdated){
                               //Guardo el valor del quantity
                               let newValue = QntyProdsFromCarts[i].quantity.toString()
 
+                                //Se lo paso al metodo que hace el descuento del stock
+                             const ResultprodsUpdated =await this.#updateStockProduct(pid, newValue)
+                                // console.log(ResultprodsUpdated);
 
-                             const prodsUpdated =await this.#updateStockProduct(pid, newValue)
-                              
-                            return prodsUpdated
+                                  //Si ResultprodsUpdated.acknowledged devuelve true lo guarda en un nuevo array para el ticket de compra
+                                if (ResultprodsUpdated.acknowledged === true) {
+                                        let prodFiltered = await this.prodsService.getSomeProdsById(pid)
+                                        prodsPurcharsed.push(prodFiltered)
+                                        console.log("Productos para el ticket de compra: ",prodsPurcharsed);
+
+                                        //Lo saco del carrito
+                                        for (let i = 0; i < array.length; i++) {
+                                          const element = array[i];
+                                          
+                                        }
+                                        this.deleteOnCartAProd(cid, pid)
+
+                                        return prodsPurcharsed
+                                }
+                                  if (!ResultprodsUpdated.acknowledged === true) {
+                                    let prodFiltered1 = await this.prodsService.getSomeProdsById(pid)
+                                  OutOfStock.push(prodFiltered1)
+                                  console.log("Prods fuera de stock:",prodFiltered1);
+                                  }
+                                
+                            
                           }
 
                           

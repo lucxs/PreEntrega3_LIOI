@@ -45,9 +45,9 @@ class ProductsController{
             
         }
 
-        updateProduct(id, newObject){
+         async updateProduct(id, newObject){
 
-            return this.service.updateProduct(id, newObject);
+            return await this.service.updateProduct(id, newObject);
         }
 
         deleteProduct(data){

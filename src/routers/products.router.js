@@ -67,17 +67,17 @@ prodsRouter.post('/', async(req, res)=>{
 
 //Actualizando Productos
 
-prodsRouter.put('/', async(req, res)=>{
+prodsRouter.put('/:pid', async(req, res)=>{
 
 try {
 
             //guardo en newObject lo que recibo del body para actualizar
      let newObject = await req.body;
-     let pid = req.query.pid;
+     let pid = req.params.pid
 
 
-      await prodsController.updateProduct(pid, newObject);
-
+      const result = await prodsController.updateProduct(pid, newObject);
+            res.send(result)
     
 } catch (error) {
     console.log(error);

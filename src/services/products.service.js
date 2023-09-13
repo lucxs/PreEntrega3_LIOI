@@ -37,12 +37,20 @@ export default class ProductsServices {
          }  
             
    
-           updateProduct(id, newObject){
+           async updateProduct(id, newObject){
             
-               const filtro = {};
-               filtro[newObject.campo] = newObject.valor;
+               try {
 
-               return this.dao.updateProduct(id,filtro)
+                  const filtro = {};
+               filtro[newObject.campo] =await newObject.valor;
+
+               return await this.dao.updateProduct(id,filtro)
+                  
+               } catch (error) {
+
+                  console.log("Error en products.Services: ", error);
+               }
+               
                   
     }
 
